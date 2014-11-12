@@ -10,7 +10,7 @@ public class Assigement2Servlet extends HttpServlet {
 		resp.setContentType("text/html");
 		int num1; int num2; int result;
 		num1 = 2; num2= 3; result = 2*3;
-		String resultStr = new String("the result of"+num1+"*"+num2+"="+result);
+		String resultStr = new String("the result of "+num1+" * "+num2+" = "+result);
 		resp.getWriter().println(resultStr);
 	}
 }
