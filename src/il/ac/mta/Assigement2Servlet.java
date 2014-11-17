@@ -17,16 +17,16 @@ public class Assigement2Servlet extends HttpServlet {
 	
 		//exercise 3
 		//part 1
-		double radius, area; 
+		double radius; 
 		radius = 50;
-		area = Math.PI * Math.pow(radius, 2);
+		String area = String.format("%.2f", Math.PI * Math.pow(radius, 2));
 		String resultArea = new String("Area of circle with radius "+radius+" is: "+area+" square-cm");
 	
 		//part 2
-		double angle, hypotenuse, angleInRadians, opposite ;
+		double angle, hypotenuse, angleInRadians;
 		angle = 30; hypotenuse = 50;
 		angleInRadians = Math.toRadians(angle);
-		opposite = hypotenuse* Math.sin(angleInRadians);
+		String opposite = String.format("%.2f",hypotenuse* Math.sin(angleInRadians));
 		String resultOpposite = new String("Length of opposite where angle B is 30 degrees and  Hypotenuse length is 50 cm is: "+opposite+" cm");
 		
 		//part 3
