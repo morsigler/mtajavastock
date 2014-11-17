@@ -36,7 +36,7 @@ public class Assigement2Servlet extends HttpServlet {
 		String resultPow = new String("Power of 20 with exp of 13 is: "+value);
 		
 		//printing all calculations
-		String resultCalculate = resultArea+"<br>"+resultOpposite+"<br>"+resultPow+"</br>";
+		String resultCalculate = new String (resultArea+"<p>"+resultOpposite+"<p>"+resultPow);
 		resp.getWriter().println(resultCalculate);
 	}
 }
