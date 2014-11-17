@@ -21,15 +21,22 @@ public class Assigement2Servlet extends HttpServlet {
 		radius = 50;
 		area = Math.PI * Math.pow(radius, 2);
 		String resultArea = new String("Area of circle with radius "+radius+" is: "+area+" square-cm");
-		resp.getWriter().println(resultArea);
 	
-		//part2
+		//part 2
 		double angle, hypotenuse, angleInRadians, opposite ;
 		angle = 30; hypotenuse = 50;
 		angleInRadians = Math.toRadians(angle);
 		opposite = hypotenuse* Math.sin(angleInRadians);
 		String resultOpposite = new String("Length of opposite where angle B is 30 degrees and  Hypotenuse length is 50 cm is: "+opposite+" cm");
-		resp.getWriter().println(resultOpposite);
 		
+		//part 3
+		double base, exp, value;
+		base = 20; exp = 13;
+		value = Math.pow(base, exp);
+		String resultPow = new String("Power of 20 with exp of 13 is: "+value);
+		
+		//printing all calculations
+		String resultCalculate = resultArea+"<br>"+resultOpposite+"<br>"+resultPow+"</br>";
+		resp.getWriter().println(resultCalculate);
 	}
 }
