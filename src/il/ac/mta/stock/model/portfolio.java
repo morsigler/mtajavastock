@@ -8,6 +8,7 @@
 package il.ac.mta.stock.model;
 
 import java.util.Date;
+
 import il.ac.mta.Stock;
 
 	public class portfolio{
@@ -28,6 +29,7 @@ import il.ac.mta.Stock;
 		public portfolio (){
 			stocks = new Stock[MAX_PORTFOLIO_SIZE];
 			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
+			
 			}
 		
 		static final private int MAX_PORTFOLIO_SIZE = 5;
@@ -37,8 +39,8 @@ import il.ac.mta.Stock;
 		int portfolioSize =0;
 		
 		public void addStock (Stock stock) {
-			while ( portfolioSize < 5){
-					stocks[portfolioSize] = stock;
+			if (portfolioSize < 5){
+					this.stocks[portfolioSize] = stock;
 					portfolioSize++;
 			}
 		}
@@ -48,11 +50,15 @@ import il.ac.mta.Stock;
 		
 		}
 		
-		public String getHtmlString(portfolio portfolio){
-			String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
+		public String getHtmlString(Stock[] stocks){
+			//String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
+			String rst = new String();
 			for (int i=0; i<portfolioSize; i++){
-				rst = rst+this.stocks[portfolioSize].getHtmlDescription()+"<p>";
-			}						
+				rst = rst + "<b>stock symbol: </b>" + this.stocks[portfolioSize].getSymbol() + "<br>" + 
+						"<b>stock ask: </b>" + this.stocks[portfolioSize].getAsk() + "<br>"+
+						"<b>stock bid: </b>" + this.stocks[portfolioSize].getBid() + "<br>" + 
+						"<b>stock date: </b>" + this.stocks[portfolioSize].getDate() + "<br>"+"<p>";
+			}	
 			return rst;
 			
 		}
