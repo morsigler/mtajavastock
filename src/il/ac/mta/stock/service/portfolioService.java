@@ -58,12 +58,5 @@ import il.ac.mta.stock.model.portfolio;
 			
 			return myPortfolio;
 		}
-	
-	
-		
-		
-		
-		
-		
 		
 	}
