@@ -50,14 +50,14 @@ import il.ac.mta.Stock;
 		
 		}
 		
-		public String getHtmlString(Stock[] stocks){
-			//String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
+		public String getHtmlString(){
+			String title = new String("<h1>"+this.title+"</h1>"+"<br>");
 			String rst = new String();
 			for (int i=0; i<portfolioSize; i++){
-				rst = rst + "<b>stock symbol: </b>" + this.stocks[portfolioSize].getSymbol() + "<br>" + 
-						"<b>stock ask: </b>" + this.stocks[portfolioSize].getAsk() + "<br>"+
-						"<b>stock bid: </b>" + this.stocks[portfolioSize].getBid() + "<br>" + 
-						"<b>stock date: </b>" + this.stocks[portfolioSize].getDate() + "<br>"+"<p>";
+				rst += "<b>stock symbol: </b>" + this.stocks[i].getSymbol() + "<br>" + 
+						"<b>stock ask: </b>" + this.stocks[i].getAsk() + "<br>"+
+						"<b>stock bid: </b>" + this.stocks[i].getBid() + "<br>" + 
+						"<b>stock date: </b>" + this.stocks[i].getDate() + "<br>"+"<p>";
 			}	
 			return rst;
 			

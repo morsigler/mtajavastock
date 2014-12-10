@@ -19,9 +19,10 @@ import il.ac.mta.stock.model.portfolio;
 		
 		
 		public portfolio getPortfolio(){
-		
+			
 			portfolio myPortfolio;
 			myPortfolio = new portfolio();
+			
 			Stock stock1, stock2, stock3;
 			stock1 = new Stock();
 			stock2 = new Stock();
