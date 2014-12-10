@@ -6,15 +6,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
-		<servlet-name>stockDetails</servlet-name>
-		<servlet-class>il.ac.mta.StockDetailsServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>stockDetails</servlet-name>
-		<url-pattern>/stockDetails</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>PortfolioServlet</servlet-name>
 		<servlet-class>il.ac.mta.stock.servlet.PortfolioServlet</servlet-class>
 	</servlet>
