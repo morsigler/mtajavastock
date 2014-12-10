@@ -4,14 +4,6 @@ xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<servlet>
-		<servlet-name>Assigement2</servlet-name>
-		<servlet-class>il.ac.mta.Assigement2Servlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Assigement2</servlet-name>
-		<url-pattern>/morsigler</url-pattern>
-	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>stockDetails</servlet-name>
