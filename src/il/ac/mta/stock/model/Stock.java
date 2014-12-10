@@ -4,8 +4,9 @@ import java.util.Date;
 
 public class Stock {
 	
-	String symbol; double ask, bid; Date date;
-
+	 String symbol;
+	 double ask, bid;
+	 Date date;
 
 	public String getSymbol() {
 		return symbol;
@@ -51,4 +52,19 @@ public class Stock {
 		return stockDetails;
 	}
 	
+	//constructor
+	public Stock(String symbol, double ask, double bid, Date date){
+		setAsk(ask);
+		setSymbol(symbol);
+		setBid(bid);
+		setDate(date);
+	}
+	
+	//copy constructor
+	public Stock (Stock stock){
+		setAsk(stock.getAsk());
+		setSymbol(stock.getSymbol());
+		setBid(stock.getBid());
+		setDate(stock.getDate());
+	}
 }
