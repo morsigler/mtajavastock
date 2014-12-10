@@ -13,15 +13,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import il.ac.mta.stock.model.Stock;
-import il.ac.mta.stock.model.portfolio;
+import il.ac.mta.stock.model.Portfolio;
 
-	public class portfolioService{
+	public class PortfolioService{
 		
 		
-		public portfolio getPortfolio(){
+		public Portfolio getPortfolio(){
 			
-			portfolio myPortfolio;
-			myPortfolio = new portfolio();
+			Portfolio myPortfolio;
+			myPortfolio = new Portfolio();
 			
 			Stock stock1, stock2, stock3;
 			stock1 = new Stock();

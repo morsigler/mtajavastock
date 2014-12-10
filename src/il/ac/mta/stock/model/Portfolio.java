@@ -9,7 +9,7 @@ package il.ac.mta.stock.model;
 
 import java.util.Date;
 
-	public class portfolio{
+	public class Portfolio{
 		
 		public class StockStatus {
 			
@@ -30,7 +30,7 @@ import java.util.Date;
 		private StockStatus[] stocksStatus;
 		int portfolioSize =0;
 		
-		public portfolio (){
+		public Portfolio (){
 			stocks = new Stock[MAX_PORTFOLIO_SIZE];
 			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 			

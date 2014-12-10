@@ -1,8 +1,8 @@
 package il.ac.mta.stock.servlet;
 
 import il.ac.mta.stock.model.Stock;
-import il.ac.mta.stock.model.portfolio;
-import il.ac.mta.stock.service.portfolioService;
+import il.ac.mta.stock.model.Portfolio;
+import il.ac.mta.stock.service.PortfolioService;
 
 import java.io.IOException;
 
@@ -15,8 +15,8 @@ public class PortfolioServlet extends HttpServlet{
 			throws IOException {
 		resp.setContentType("text/html");
 		
-		portfolioService portfolioService = new portfolioService();
-		portfolio portfolio = portfolioService.getPortfolio();
+		PortfolioService portfolioService = new PortfolioService();
+		Portfolio portfolio = portfolioService.getPortfolio();
 		Stock[] stocks = portfolio.getStocks();
 		String rst = new String(portfolio.getHtmlString());
 		resp.getWriter().println(rst);
