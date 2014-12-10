@@ -1,6 +1,6 @@
 package il.ac.mta.stock.servlet;
 
-import il.ac.mta.Stock;
+import il.ac.mta.stock.model.Stock;
 import il.ac.mta.stock.model.portfolio;
 import il.ac.mta.stock.service.portfolioService;
 

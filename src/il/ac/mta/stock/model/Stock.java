@@ -1,4 +1,4 @@
-package il.ac.mta;
+package il.ac.mta.stock.model;
 
 import java.util.Date;
 

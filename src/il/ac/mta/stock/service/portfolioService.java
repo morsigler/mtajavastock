@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import il.ac.mta.Stock;
+import il.ac.mta.stock.model.Stock;
 import il.ac.mta.stock.model.portfolio;
 
 	public class portfolioService{

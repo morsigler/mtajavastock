@@ -9,8 +9,6 @@ package il.ac.mta.stock.model;
 
 import java.util.Date;
 
-import il.ac.mta.Stock;
-
 	public class portfolio{
 		
 		public class StockStatus {
@@ -26,18 +24,19 @@ import il.ac.mta.Stock;
 			
 		}
 		
-		public portfolio (){
-			stocks = new Stock[MAX_PORTFOLIO_SIZE];
-			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
-			
-			}
-		
 		static final private int MAX_PORTFOLIO_SIZE = 5;
 		String title;
 		private Stock[] stocks;
 		private StockStatus[] stocksStatus;
 		int portfolioSize =0;
 		
+		public portfolio (){
+			stocks = new Stock[MAX_PORTFOLIO_SIZE];
+			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
+			
+			}
+		
+		//adding stocks to array
 		public void addStock (Stock stock) {
 			if (portfolioSize < 5){
 					this.stocks[portfolioSize] = stock;
