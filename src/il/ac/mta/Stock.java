@@ -47,7 +47,7 @@ public class Stock {
 	}
 	
 	public String getHtmlDescription() {
-		String stockDetails = new String("<b>stock symbol: </b>" + this.getSymbol() + "<br>" + "<b>stock ask: </b>" + this.getAsk() + "<br>" + "<b>stock bid: </b>" + this.getBid() + "<br>" + "<b>stock date: </b>" + this.getDate() + "<br>");
+		String stockDetails = new String("<b>stock symbol: </b>" + this.getSymbol() + "<br>" + "<b>stock ask: </b>" + this.getAsk() + "<br>" + "<b>stock bid: </b>" + this.getBid() + "<br>" + "<b>stock date: </b>" + this.getDate() + "<p>");
 		return stockDetails;
 	}
 	

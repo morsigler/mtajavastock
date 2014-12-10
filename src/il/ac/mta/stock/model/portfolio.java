@@ -54,11 +54,9 @@ import il.ac.mta.Stock;
 			String title = new String("<h1>"+this.title+"</h1>"+"<br>");
 			String rst = new String();
 			for (int i=0; i<portfolioSize; i++){
-				rst += "<b>stock symbol: </b>" + this.stocks[i].getSymbol() + "<br>" + 
-						"<b>stock ask: </b>" + this.stocks[i].getAsk() + "<br>"+
-						"<b>stock bid: </b>" + this.stocks[i].getBid() + "<br>" + 
-						"<b>stock date: </b>" + this.stocks[i].getDate() + "<br>"+"<p>";
+				rst += this.stocks[i].getHtmlDescription();
 			}	
+			
 			return rst;
 			
 		}
