@@ -52,6 +52,9 @@ public class Stock {
 		return stockDetails;
 	}
 	
+	public Stock(){
+		
+	}
 	//constructor
 	public Stock(String symbol, double ask, double bid, Date date){
 		setAsk(ask);

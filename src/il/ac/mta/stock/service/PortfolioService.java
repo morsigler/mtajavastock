@@ -28,6 +28,7 @@ import il.ac.mta.stock.model.Portfolio;
 			stock2 = new Stock();
 			stock3 = new Stock();
 			
+			
 			DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
 			Date stockDate = null;
 			try {
