@@ -74,7 +74,6 @@ import java.util.Date;
 			// copy c'tor
 			public StockStatus (StockStatus stockStatus)
 			{
-			      this();
 	              setSymbol(stockStatus.symbol);
 	              setCurrentAsk(stockStatus.currentAsk);
 	              setCurrentBid(stockStatus.currentBid);
