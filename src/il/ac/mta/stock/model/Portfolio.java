@@ -11,16 +11,18 @@ import java.util.Date;
 
 	public class Portfolio{
 		
+		public enum ALGO_RECOMMENDATION{
+			DO_NOTHING,
+			BUY,
+			SELL
+		}
+		
 		public class StockStatus {
-			
-			static final public int DO_NOTHING = 0;
-			static final public int BUY = 1;
-			static final public int SELL = 2;
-			
 			String symbol;
 			double currentBid, currentAsk;
 			Date date;
-			int recommendation, stockQuantity;
+			ALGO_RECOMMENDATION recommendation;
+			int stockQuantity;
 			
 			
 			public String getSymbol() {
@@ -47,10 +49,10 @@ import java.util.Date;
 			public void setDate(Date date) {
 				this.date = date;
 			}
-			public int getRecommendation() {
+			public ALGO_RECOMMENDATION getRecommendation() {
 				return recommendation;
 			}
-			public void setRecommendation(int recommendation) {
+			public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
 				this.recommendation = recommendation;
 			}
 			public int getStockQuantity() {
@@ -67,7 +69,7 @@ import java.util.Date;
 				currentAsk = 0;
 				currentBid = 0;
 				date = new Date();
-				recommendation = DO_NOTHING;
+				recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
 				stockQuantity = 0;
 			}
 		
@@ -93,26 +95,29 @@ import java.util.Date;
 			stocks = new Stock[MAX_PORTFOLIO_SIZE];
 			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 			portfolioSize =0;
-			
 			}
-		
+			
 		//c'tor
 		public Portfolio (String title)
 		{
+			this();
 			setTitle(title);
 		}
 	
 		//copy c'tor
 		public Portfolio(Portfolio portfolio)
 		{
+			this();
 			setTitle(portfolio.getTitle());
 			setPortfolioSize(portfolio.getPortfolioSize());
 
-		     for (int i = 0; i < portfolioSize; i++) 
-	             stocks[i] = new Stock(portfolio.getStocks()[i]);
-
-		     for(int i = 0; i < portfolioSize; i++)
-		    	 stocksStatus[i] = new StockStatus (portfolio.getStocksStatus()[i]);
+		     for (int i = 0; i < portfolioSize; i++) {
+	           stocks[i] = new Stock(portfolio.getStocks()[i]);
+	           }
+		     
+		     for(int j = 0; j < portfolioSize; j++){
+		    	 stocksStatus[j] = new StockStatus(portfolio.getStocksStatus()[j]);
+		    	 }
 		}
 
 		
@@ -150,16 +155,16 @@ import java.util.Date;
 
 		//adding stocks to array
 		public void addStock (Stock stock) {
-			if (portfolioSize < 5){
-					this.stocks[portfolioSize] = stock;
+			if (portfolioSize < MAX_PORTFOLIO_SIZE){
+					stocks[portfolioSize] = stock;
+					stocksStatus[portfolioSize] = new StockStatus();
 					portfolioSize++;
 			}
 		}
 		
 		//printing stocks
 		public String getHtmlString(){
-			String title = new String("<h1>"+this.title+"</h1>"+"<br>");
-			String rst = new String();
+			String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
 			for (int i=0; i<portfolioSize; i++){
 				rst += this.stocks[i].getHtmlDescription();
 			}	
