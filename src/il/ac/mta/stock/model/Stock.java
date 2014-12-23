@@ -5,7 +5,7 @@ import java.util.Date;
 public class Stock {
 	
 	 private String symbol;
-	 private double ask, bid;
+	 private float ask, bid;
 	 private Date date;
 	 
 	public Stock(){
@@ -13,7 +13,7 @@ public class Stock {
 	}
 	
 	//constructor
-	public Stock(String symbol, double ask, double bid, Date date){
+	public Stock(String symbol, float ask, float bid, Date date){
 		setAsk(ask);
 		setSymbol(symbol);
 		setBid(bid);
@@ -38,22 +38,22 @@ public class Stock {
 	}
 
 
-	public double getAsk() {
+	public float getAsk() {
 		return ask;
 	}
 
 
-	public void setAsk(double ask) {
+	public void setAsk(float ask) {
 		this.ask = ask;
 	}
 
 
-	public double getBid() {
+	public float getBid() {
 		return bid;
 	}
 
 
-	public void setBid(double bid) {
+	public void setBid(float bid) {
 		this.bid = bid;
 	}
 

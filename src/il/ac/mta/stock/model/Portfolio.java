@@ -11,15 +11,8 @@ import java.util.Date;
 
 	public class Portfolio{
 		
-		public enum ALGO_RECOMMENDATION{
-			DO_NOTHING,
-			BUY,
-			SELL
-		}
-		
-		
 		static final private int MAX_PORTFOLIO_SIZE = 5;
-		String title;
+		private String title;
 		private Stock[] stocks;
 		private StockStatus[] stocksStatus;
 		private int portfolioSize;
@@ -87,18 +80,7 @@ import java.util.Date;
 		public Stock[] getStocks() {
 			return stocks;
 		}
-		//remove stocks from array
-		public boolean removeStock (Stock stock){
-			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
-				if (stocks[i].getSymbol().equals(stock.getSymbol())){
-					this.getStocks()[i] = this.getStocks()[portfolioSize-1];
-					this.getStocks()[portfolioSize-1] = new Stock();
-					return true;
-				}
-			}
-			return false;
-		}
-
+		
 		//adding stocks to array
 		public void addStock (Stock stock) {
 			if (portfolioSize < MAX_PORTFOLIO_SIZE){
@@ -110,23 +92,64 @@ import java.util.Date;
 				System.out.println("Can’t add new stock, portfolio can have only"+ MAX_PORTFOLIO_SIZE +" stocks");
 			}
 		}
+		//remove stocks from array
+		public boolean removeStock (String stockSymbol){
+			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+				if (stocks[i].getSymbol().equals(stockSymbol)){
+					if (i != portfolioSize-1){ // if the stock we remove is not at the end of the array
+						this.getStocks()[i] = this.getStocks()[portfolioSize-1];
+						this.getStocksStatus()[i] = this.getStocksStatus()[portfolioSize-1];
+					}
+					this.getStocks()[portfolioSize-1] = new Stock();
+					this.getStocksStatus()[portfolioSize-1] = new StockStatus();
+					portfolioSize--;
+					return true;
+				}
+			}
+			return false;
+		}
+
+		//printing stocks
+		public String getHtmlString(){
+			String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
+			for (int i=0; i<portfolioSize; i++){
+				rst += this.stocks[i].getHtmlDescription();
+			}		
+			return rst;	
+		}
+		
+		//selling stock
+		public boolean sellStock(String symbol, int quantity){
+			float sellProfit;
+			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+				if (stocks[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
+					if (quantity <=0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
+						sellProfit = stocksStatus[i].getStockQuantity() * stocks[i].getBid();// the profit is all the amount of stocks left
+						removeStock(stocks[i].getSymbol());// we can remove stock after we sold all of it
+					}
+					else {
+						sellProfit = quantity * stocks[i].getBid(); //the profit is only the amount we asked to sell
+						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
+					}
+					updateBalance(sellProfit);
+					return true;
+				}
+				
+			}
+			System.out.println("the stock you want to sell doesn't exist");
+			return false;
+		}
 		
 		// adding amount to balance
 		public void updateBalance(float amount){
 			this.balance += amount;
 		}
 		
-		//printing stocks
-		public String getHtmlString(){
-			String rst = new String("<h1>"+this.title+"</h1>"+"<br>");
-			for (int i=0; i<portfolioSize; i++){
-				rst += this.stocks[i].getHtmlDescription();
-			}	
-			
-			return rst;	
+		public enum ALGO_RECOMMENDATION{
+			DO_NOTHING,
+			BUY,
+			SELL
 		}
-		
-	
 		
 		public class StockStatus {
 			String symbol;
