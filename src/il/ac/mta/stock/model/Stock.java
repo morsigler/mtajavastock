@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class Stock {
 	
-	 String symbol;
-	 double ask, bid;
-	 Date date;
+	 private String symbol;
+	 private double ask, bid;
+	 private Date date;
 	 
 	public Stock(){
 		

@@ -17,84 +17,19 @@ import java.util.Date;
 			SELL
 		}
 		
-		public class StockStatus {
-			String symbol;
-			double currentBid, currentAsk;
-			Date date;
-			ALGO_RECOMMENDATION recommendation;
-			int stockQuantity;
-			
-			
-			public String getSymbol() {
-				return symbol;
-			}
-			public void setSymbol(String symbol) {
-				this.symbol = symbol;
-			}
-			public double getCurrentBid() {
-				return currentBid;
-			}
-			public void setCurrentBid(double currentBid) {
-				this.currentBid = currentBid;
-			}
-			public double getCurrentAsk() {
-				return currentAsk;
-			}
-			public void setCurrentAsk(double currentAsk) {
-				this.currentAsk = currentAsk;
-			}
-			public Date getDate() {
-				return date;
-			}
-			public void setDate(Date date) {
-				this.date = date;
-			}
-			public ALGO_RECOMMENDATION getRecommendation() {
-				return recommendation;
-			}
-			public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
-				this.recommendation = recommendation;
-			}
-			public int getStockQuantity() {
-				return stockQuantity;
-			}
-			public void setStockQuantity(int stockQuantity) {
-				this.stockQuantity = stockQuantity;
-			}
-		
-			//c'tor
-			public	StockStatus()
-			{
-				symbol = "empty";
-				currentAsk = 0;
-				currentBid = 0;
-				date = new Date();
-				recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
-				stockQuantity = 0;
-			}
-		
-			// copy c'tor
-			public StockStatus (StockStatus stockStatus)
-			{
-	              setSymbol(stockStatus.symbol);
-	              setCurrentAsk(stockStatus.currentAsk);
-	              setCurrentBid(stockStatus.currentBid);
-	              setDate(stockStatus.date);
-	              setRecommendation(stockStatus.recommendation);
-	              setStockQuantity(stockStatus.stockQuantity);
-			}
-		}
 		
 		static final private int MAX_PORTFOLIO_SIZE = 5;
 		String title;
 		private Stock[] stocks;
 		private StockStatus[] stocksStatus;
-		int portfolioSize;
+		private int portfolioSize;
+		private float balance;
 		
 		public Portfolio (){
 			stocks = new Stock[MAX_PORTFOLIO_SIZE];
 			stocksStatus = new StockStatus[MAX_PORTFOLIO_SIZE];
 			portfolioSize =0;
+			balance = 0;
 			}
 			
 		//c'tor
@@ -152,14 +87,33 @@ import java.util.Date;
 		public Stock[] getStocks() {
 			return stocks;
 		}
+		//remove stocks from array
+		public boolean removeStock (Stock stock){
+			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+				if (stocks[i].getSymbol().equals(stock.getSymbol())){
+					this.getStocks()[i] = this.getStocks()[portfolioSize-1];
+					this.getStocks()[portfolioSize-1] = new Stock();
+					return true;
+				}
+			}
+			return false;
+		}
 
 		//adding stocks to array
 		public void addStock (Stock stock) {
 			if (portfolioSize < MAX_PORTFOLIO_SIZE){
 					stocks[portfolioSize] = stock;
-					stocksStatus[portfolioSize] = new StockStatus();
+					stocksStatus[portfolioSize] = new StockStatus(stock);
 					portfolioSize++;
 			}
+			else {
+				System.out.println("Can’t add new stock, portfolio can have only"+ MAX_PORTFOLIO_SIZE +" stocks");
+			}
+		}
+		
+		// adding amount to balance
+		public void updateBalance(float amount){
+			this.balance += amount;
 		}
 		
 		//printing stocks
@@ -169,9 +123,87 @@ import java.util.Date;
 				rst += this.stocks[i].getHtmlDescription();
 			}	
 			
-			return rst;
-			
+			return rst;	
 		}
 		
+	
+		
+		public class StockStatus {
+			String symbol;
+			double currentBid, currentAsk;
+			Date date;
+			ALGO_RECOMMENDATION recommendation;
+			int stockQuantity;
+			
+			//c'tor
+			public	StockStatus()
+			{
+				symbol = "empty";
+				currentAsk = 0;
+				currentBid = 0;
+				date = new Date();
+				recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
+				stockQuantity = 0;
+			}
+		
+			// copy c'tor
+			public StockStatus (StockStatus stockStatus)
+			{
+	              setSymbol(stockStatus.symbol);
+	              setCurrentAsk(stockStatus.currentAsk);
+	              setCurrentBid(stockStatus.currentBid);
+	              setDate(stockStatus.date);
+	              setRecommendation(stockStatus.recommendation);
+	              setStockQuantity(stockStatus.stockQuantity);
+			}
+			
+			public StockStatus (Stock stock)
+			{
+				this();
+	              setSymbol(stock.getSymbol());
+	              setCurrentAsk(stock.getAsk());
+	              setCurrentBid(stock.getBid());
+	              setDate(stock.getDate());
+			}
+			
+			public String getSymbol() {
+				return symbol;
+			}
+			public void setSymbol(String symbol) {
+				this.symbol = symbol;
+			}
+			public double getCurrentBid() {
+				return currentBid;
+			}
+			public void setCurrentBid(double currentBid) {
+				this.currentBid = currentBid;
+			}
+			public double getCurrentAsk() {
+				return currentAsk;
+			}
+			public void setCurrentAsk(double currentAsk) {
+				this.currentAsk = currentAsk;
+			}
+			public Date getDate() {
+				return date;
+			}
+			public void setDate(Date date) {
+				this.date = date;
+			}
+			public ALGO_RECOMMENDATION getRecommendation() {
+				return recommendation;
+			}
+			public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
+				this.recommendation = recommendation;
+			}
+			public int getStockQuantity() {
+				return stockQuantity;
+			}
+			public void setStockQuantity(int stockQuantity) {
+				this.stockQuantity = stockQuantity;
+			}
+		
+	
+		}
 	}
 	

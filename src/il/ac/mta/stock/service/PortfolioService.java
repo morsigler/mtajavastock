@@ -56,7 +56,7 @@ import il.ac.mta.stock.model.Portfolio;
 			myPortfolio.addStock(stock1);
 			myPortfolio.addStock(stock2);
 			myPortfolio.addStock(stock3);
-			
+			myPortfolio.removeStock(stock1);
 			
 			return myPortfolio;
 		}
