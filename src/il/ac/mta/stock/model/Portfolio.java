@@ -197,6 +197,15 @@ import java.util.Date;
 			return this.getBalance() + this.getStocksValue();
 		}
 		
+		//printing portfolio
+		public String getHtmlDescription(){
+			String rst = new String ("<b>"+ getTitle()+"<p></b>");
+			for (int i=0; i<getPortfolioSize(); i++){
+				rst += getStocks()[i].getHtmlDescription();
+				rst += "stock quantity is: " + getStocksStatus()[i].getStockQuantity()+"<p>";
+			}
+			return rst;
+		}
 		public enum ALGO_RECOMMENDATION{
 			DO_NOTHING,
 			BUY,
