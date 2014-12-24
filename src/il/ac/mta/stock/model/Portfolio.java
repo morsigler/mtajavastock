@@ -93,13 +93,22 @@ import java.util.Date;
 		
 		//adding stocks to array
 		public void addStock (Stock stock) {
-			if (portfolioSize < MAX_PORTFOLIO_SIZE){
-					stocks[portfolioSize] = stock;
-					stocksStatus[portfolioSize] = new StockStatus(stock);
-					portfolioSize++;
+			boolean doesExist = false;
+			for (int i=0; i< getPortfolioSize(); i++){
+				if (stock.getSymbol().equals(getStocks()[i].getSymbol())){
+					doesExist = true;
+					return;
+				}		
 			}
-			else {
-				System.out.println("Can’t add new stock, portfolio can have only"+ MAX_PORTFOLIO_SIZE +" stocks");
+			if (!doesExist){
+				if (portfolioSize < MAX_PORTFOLIO_SIZE){
+						stocks[portfolioSize] = stock;
+						stocksStatus[portfolioSize] = new StockStatus(stock);
+						portfolioSize++;
+				}
+				else {
+					System.out.println("Can’t add new stock, portfolio can have only"+ MAX_PORTFOLIO_SIZE +" stocks");
+				}
 			}
 		}
 		//remove stocks from array
