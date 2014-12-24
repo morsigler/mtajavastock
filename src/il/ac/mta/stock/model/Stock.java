@@ -70,6 +70,6 @@ public class Stock {
 	public String getHtmlDescription() {
 		return ("<b>stock symbol: </b>" + this.getSymbol() + "<br>" + "<b>stock ask: </b>" + 
 				this.getAsk() + "<br>" + "<b>stock bid: </b>" + this.getBid() + "<br>" + "<b>stock date: </b>" + 
-				this.getDate() + "<p>");
+				this.getDate()+"<br>");
 	}
 }

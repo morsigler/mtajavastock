@@ -25,6 +25,8 @@ import java.util.Date;
 			balance = 0;
 			}
 			
+	
+
 		//c'tor
 		public Portfolio (String title)
 		{
@@ -81,6 +83,14 @@ import java.util.Date;
 			return stocks;
 		}
 		
+		public float getBalance() {
+			return balance;
+		}
+
+		public void setBalance(float balance) {
+			this.balance = balance;
+		}
+		
 		//adding stocks to array
 		public void addStock (Stock stock) {
 			if (portfolioSize < MAX_PORTFOLIO_SIZE){
@@ -96,6 +106,7 @@ import java.util.Date;
 		public boolean removeStock (String stockSymbol){
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocks[i].getSymbol().equals(stockSymbol)){
+					sellStock(stocks[i].getSymbol(),-1);
 					if (i != portfolioSize-1){ // if the stock we remove is not at the end of the array
 						this.getStocks()[i] = this.getStocks()[portfolioSize-1];
 						this.getStocksStatus()[i] = this.getStocksStatus()[portfolioSize-1];
@@ -123,12 +134,12 @@ import java.util.Date;
 			float sellProfit;
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocks[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
-					if (quantity <=0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
-						sellProfit = stocksStatus[i].getStockQuantity() * stocks[i].getBid();// the profit is all the amount of stocks left
-						removeStock(stocks[i].getSymbol());// we can remove stock after we sold all of it
+					if (quantity <0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
+						sellProfit = (float) (stocksStatus[i].getStockQuantity() * stocksStatus[i].getCurrentBid());// the profit is all the amount of stocks left
+						stocksStatus[i].setStockQuantity(0);
 					}
 					else {
-						sellProfit = quantity * stocks[i].getBid(); //the profit is only the amount we asked to sell
+						sellProfit = (float) (quantity * stocksStatus[i].getCurrentBid()); //the profit is only the amount we asked to sell
 						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
 					}
 					updateBalance(sellProfit);
@@ -138,6 +149,33 @@ import java.util.Date;
 			}
 			System.out.println("the stock you want to sell doesn't exist");
 			return false;
+		}
+		
+		//buying stock
+		public boolean buyStock(String symbol, int quantity){
+			int howManyStocks; 
+			
+			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+				if (stocks[i].getSymbol().equals(symbol)){
+					if (quantity < 0){ // buy with all balance
+						howManyStocks = (int) (this.balance / stocksStatus[i].getCurrentAsk());
+						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + howManyStocks);
+						this.balance = 0;
+					} 
+					else {
+						if(quantity * stocksStatus[i].getCurrentAsk() > this.balance){//checking that balance won't be negative
+							System.out.println("you don't have enough money for this quantity");
+							return false;
+						}
+						else{
+							stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
+							updateBalance(-(float) (quantity * stocksStatus[i].getCurrentAsk()));
+							return true;
+						}
+					}
+				}
+			}
+			return false;	
 		}
 		
 		// adding amount to balance

@@ -17,12 +17,13 @@ public class PortfolioServlet extends HttpServlet{
 		
 		PortfolioService portfolioService = new PortfolioService();
 		Portfolio portfolio = portfolioService.getPortfolio();
+		resp.getWriter().println("<b>"+portfolio.getTitle()+"<br></b>");
 		for (int i=0; i<3; i++){
 			resp.getWriter().println(portfolio.getStocks()[i].getHtmlDescription());
-			
+			resp.getWriter().println("stock quantity is" +portfolio.getStocksStatus()[i].getStockQuantity()+"<p>");
 		}
 		
-		
+		resp.getWriter().println("balance is: "+ portfolio.getBalance()+"<br>");
 
 		/*Portfolio potfolio2 = new Portfolio(portfolio);
 		portfolio2.setTitle("Portfolio 2");
