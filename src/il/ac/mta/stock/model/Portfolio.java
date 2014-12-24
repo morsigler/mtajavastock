@@ -183,6 +183,20 @@ import java.util.Date;
 			this.balance += amount;
 		}
 		
+		//get stocks value
+		public float getStocksValue(){
+			float stocksSum=0;
+			for (int i=0; i<portfolioSize; i++){
+				stocksSum += stocksStatus[i].getStockQuantity()* stocksStatus[i].getCurrentBid();
+			}
+			return stocksSum;
+		}
+		
+		//get total portfolio value
+		public float getPortfolioValue(){
+			return this.getBalance() + this.getStocksValue();
+		}
+		
 		public enum ALGO_RECOMMENDATION{
 			DO_NOTHING,
 			BUY,

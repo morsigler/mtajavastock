@@ -17,26 +17,13 @@ public class PortfolioServlet extends HttpServlet{
 		
 		PortfolioService portfolioService = new PortfolioService();
 		Portfolio portfolio = portfolioService.getPortfolio();
-		resp.getWriter().println("<b>"+portfolio.getTitle()+"<br></b>");
-		for (int i=0; i<3; i++){
+		resp.getWriter().println("<b>"+portfolio.getTitle()+"<p></b>");
+		for (int i=0; i<portfolio.getPortfolioSize(); i++){
 			resp.getWriter().println(portfolio.getStocks()[i].getHtmlDescription());
-			resp.getWriter().println("stock quantity is" +portfolio.getStocksStatus()[i].getStockQuantity()+"<p>");
+			resp.getWriter().println("stock quantity is: " +portfolio.getStocksStatus()[i].getStockQuantity()+"<p>");
 		}
-		
 		resp.getWriter().println("balance is: "+ portfolio.getBalance()+"<br>");
-
-		/*Portfolio potfolio2 = new Portfolio(portfolio);
-		portfolio2.setTitle("Portfolio 2");
-
-		resp.getWriter().println(portfolio.getHtmlString() + "<p>");
-		resp.getWriter().println(portfolio2.getHtmlString() + "<p>");
-		
-		portfolio2.getStocks()[2].setBid(55.55f);
-		
-		resp.getWriter().println("after changing bid value of portfolio 2" + "</br>");
-	
-		resp.getWriter().println(portfolio.getHtmlString() + "<p>");
-		
-		resp.getWriter().println(portfolio2.getHtmlString());*/
+		resp.getWriter().println("all stocks value is: "+ portfolio.getStocksValue()+"<br>");
+		resp.getWriter().println("the total portfolio value is: "+ portfolio.getPortfolioValue()+"<br>");
 	}
 }
