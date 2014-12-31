@@ -29,6 +29,14 @@ public class StockStatus extends Stock {
 		this.stockQuantity = 0;	
 		
 	}
+	
+	public StockStatus(StockStatus stockStatus){
+		this.setAsk(stockStatus.getAsk());
+		this.setBid(stockStatus.getBid());
+		this.setDate(stockStatus.getDate());
+		this.setRecommendation(stockStatus.getRecommendation());
+		this.setStockQuantity(stockStatus.getStockQuantity());
+	}
 
 	public ALGO_RECOMMENDATION getRecommendation() {
 		return recommendation;
