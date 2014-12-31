@@ -144,11 +144,11 @@ import java.util.Date;
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocks[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
 					if (quantity <0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
-						sellProfit = (float) (stocksStatus[i].getStockQuantity() * stocksStatus[i].getCurrentBid());// the profit is all the amount of stocks left
+						sellProfit = (float) (stocksStatus[i].getStockQuantity() * stocksStatus[i].getBid());// the profit is all the amount of stocks left
 						stocksStatus[i].setStockQuantity(0);
 					}
 					else {
-						sellProfit = (float) (quantity * stocksStatus[i].getCurrentBid()); //the profit is only the amount we asked to sell
+						sellProfit = (float) (quantity * stocksStatus[i].getBid()); //the profit is only the amount we asked to sell
 						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
 					}
 					updateBalance(sellProfit);
@@ -167,18 +167,18 @@ import java.util.Date;
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocks[i].getSymbol().equals(symbol)){
 					if (quantity < 0){ // buy with all balance
-						howManyStocks = (int) (this.balance / stocksStatus[i].getCurrentAsk());
+						howManyStocks = (int) (this.balance / stocksStatus[i].getAsk());
 						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + howManyStocks);
 						this.balance = 0;
 					} 
 					else {
-						if(quantity * stocksStatus[i].getCurrentAsk() > this.balance){//checking that balance won't be negative
+						if(quantity * stocksStatus[i].getAsk() > this.balance){//checking that balance won't be negative
 							System.out.println("you don't have enough money for this quantity");
 							return false;
 						}
 						else{
 							stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
-							updateBalance(-(float) (quantity * stocksStatus[i].getCurrentAsk()));
+							updateBalance(-(float) (quantity * stocksStatus[i].getAsk()));
 							return true;
 						}
 					}
@@ -196,7 +196,7 @@ import java.util.Date;
 		public float getStocksValue(){
 			float stocksSum=0;
 			for (int i=0; i<portfolioSize; i++){
-				stocksSum += stocksStatus[i].getStockQuantity()* stocksStatus[i].getCurrentBid();
+				stocksSum += stocksStatus[i].getStockQuantity()* stocksStatus[i].getBid();
 			}
 			return stocksSum;
 		}
@@ -215,88 +215,6 @@ import java.util.Date;
 			}
 			return rst;
 		}
-		public enum ALGO_RECOMMENDATION{
-			DO_NOTHING,
-			BUY,
-			SELL
-		}
-		
-		public class StockStatus {
-			String symbol;
-			double currentBid, currentAsk;
-			Date date;
-			ALGO_RECOMMENDATION recommendation;
-			int stockQuantity;
-			
-			//c'tor
-			public	StockStatus()
-			{
-				symbol = "empty";
-				currentAsk = 0;
-				currentBid = 0;
-				date = new Date();
-				recommendation = ALGO_RECOMMENDATION.DO_NOTHING;
-				stockQuantity = 0;
-			}
-		
-			// copy c'tor
-			public StockStatus (StockStatus stockStatus)
-			{
-	              setSymbol(stockStatus.symbol);
-	              setCurrentAsk(stockStatus.currentAsk);
-	              setCurrentBid(stockStatus.currentBid);
-	              setDate(stockStatus.date);
-	              setRecommendation(stockStatus.recommendation);
-	              setStockQuantity(stockStatus.stockQuantity);
-			}
-			
-			public StockStatus (Stock stock)
-			{
-				this();
-	              setSymbol(stock.getSymbol());
-	              setCurrentAsk(stock.getAsk());
-	              setCurrentBid(stock.getBid());
-	              setDate(stock.getDate());
-			}
-			
-			public String getSymbol() {
-				return symbol;
-			}
-			public void setSymbol(String symbol) {
-				this.symbol = symbol;
-			}
-			public double getCurrentBid() {
-				return currentBid;
-			}
-			public void setCurrentBid(double currentBid) {
-				this.currentBid = currentBid;
-			}
-			public double getCurrentAsk() {
-				return currentAsk;
-			}
-			public void setCurrentAsk(double currentAsk) {
-				this.currentAsk = currentAsk;
-			}
-			public Date getDate() {
-				return date;
-			}
-			public void setDate(Date date) {
-				this.date = date;
-			}
-			public ALGO_RECOMMENDATION getRecommendation() {
-				return recommendation;
-			}
-			public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
-				this.recommendation = recommendation;
-			}
-			public int getStockQuantity() {
-				return stockQuantity;
-			}
-			public void setStockQuantity(int stockQuantity) {
-				this.stockQuantity = stockQuantity;
-			}
-		
 	
-		}
 	}
 	
