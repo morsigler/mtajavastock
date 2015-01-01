@@ -73,9 +73,6 @@ import java.util.Date;
 			return balance;
 		}
 
-		public void setBalance(float balance) {
-			this.balance = balance;
-		}
 		
 		//adding stocks to array
 		public void addStock (Stock stock) {

@@ -56,7 +56,7 @@ import il.ac.mta.stock.model.Portfolio;
 			myPortfolio.addStock(stock1);
 			myPortfolio.addStock(stock2);
 			myPortfolio.addStock(stock3);
-			myPortfolio.setBalance(10000);
+			myPortfolio.updateBalance(10000);
 			myPortfolio.buyStock("PIH", 20);
 			myPortfolio.buyStock("AAL", 30);
 			myPortfolio.buyStock("CAAS", 40);
