@@ -7,8 +7,10 @@
  */
 package il.ac.mta.stock.model;
 
+import il.ac.mta.exception.BalanceException;
 import il.ac.mta.exception.PortfolioFullException;
 import il.ac.mta.exception.StockAlreadyExistsException;
+import il.ac.mta.exception.StockNotExistException;
 
 import java.util.Date;
 
@@ -86,14 +88,14 @@ import java.util.Date;
 					}
 
 				if (portfolioSize > MAX_PORTFOLIO_SIZE)
-					throw new PortfolioFullException();
-				else {
-						stocksStatus[portfolioSize] = new StockStatus(stock);
-						portfolioSize++;
-				}
+					throw new PortfolioFullException ();
+			
+				stocksStatus[portfolioSize] = new StockStatus(stock);
+				portfolioSize++;
+	
 		}
 		//remove stocks from array
-		public boolean removeStock (String stockSymbol){
+		public void removeStock (String stockSymbol) throws StockNotExistException, BalanceException{
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocksStatus[i].getSymbol().equals(stockSymbol)){
 					sellStock(stocksStatus[i].getSymbol(),-1);
@@ -102,10 +104,8 @@ import java.util.Date;
 					}
 					this.getStocksStatus()[portfolioSize-1] = new StockStatus();
 					portfolioSize--;
-					return true;
 				}
 			}
-			return false;
 		}
 
 		//printing stocks
@@ -118,7 +118,7 @@ import java.util.Date;
 		}
 		
 		//selling stock
-		public boolean sellStock(String symbol, int quantity){
+		public void sellStock(String symbol, int quantity) throws StockNotExistException, BalanceException{
 			float sellProfit;
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
 				if (stocksStatus[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
@@ -131,16 +131,14 @@ import java.util.Date;
 						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
 					}
 					updateBalance(sellProfit);
-					return true;
 				}
-				
+				else throw new StockNotExistException(symbol);
 			}
-			System.out.println("the stock you want to sell doesn't exist");
-			return false;
+			
 		}
 		
 		//buying stock
-		public boolean buyStock(String symbol, int quantity){
+		public void buyStock(String symbol, int quantity) throws BalanceException{
 			int howManyStocks; 
 			
 			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
@@ -151,19 +149,15 @@ import java.util.Date;
 						this.balance = 0;
 					} 
 					else {
-						if(quantity * stocksStatus[i].getAsk() > this.balance){//checking that balance won't be negative
-							System.out.println("you don't have enough money for this quantity");
-							return false;
-						}
-						else{
-							stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
-							updateBalance(-(float) (quantity * stocksStatus[i].getAsk()));
-							return true;
-						}
+						if(quantity * stocksStatus[i].getAsk() > this.balance)//checking that balance won't be negative
+							throw new BalanceException();
+					
+						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
+						updateBalance(-(float) (quantity * stocksStatus[i].getAsk()));
+						
 					}
 				}
 			}
-			return false;	
 		}
 		
 		// adding amount to balance
