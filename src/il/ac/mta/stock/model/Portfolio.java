@@ -7,6 +7,9 @@
  */
 package il.ac.mta.stock.model;
 
+import il.ac.mta.exception.PortfolioFullException;
+import il.ac.mta.exception.StockAlreadyExistsException;
+
 import java.util.Date;
 
 	public class Portfolio{
@@ -75,23 +78,19 @@ import java.util.Date;
 
 		
 		//adding stocks to array
-		public void addStock (Stock stock) {
-			boolean doesExist = false;
-			for (int i=0; i< getPortfolioSize(); i++){
-				if (stock.getSymbol().equals(getStocksStatus()[i].getSymbol())){
-					doesExist = true;
-					return;
-				}		
-			}
-			if (!doesExist){
-				if (portfolioSize < MAX_PORTFOLIO_SIZE){
+		public void addStock (Stock stock) throws PortfolioFullException, StockAlreadyExistsException {
+			
+				for (int i=0; i< getPortfolioSize(); i++){
+					if (stock.getSymbol().equals(getStocksStatus()[i].getSymbol()))
+						throw new StockAlreadyExistsException (stock.getSymbol());
+					}
+
+				if (portfolioSize > MAX_PORTFOLIO_SIZE)
+					throw new PortfolioFullException();
+				else {
 						stocksStatus[portfolioSize] = new StockStatus(stock);
 						portfolioSize++;
 				}
-				else {
-					System.out.println("Can’t add new stock, portfolio can have only"+ MAX_PORTFOLIO_SIZE +" stocks");
-				}
-			}
 		}
 		//remove stocks from array
 		public boolean removeStock (String stockSymbol){
