@@ -27,15 +27,12 @@ import il.ac.mta.stock.model.Portfolio;
 			Portfolio myPortfolio;
 			myPortfolio = new Portfolio("Exercise 7 portfolio");
 			
-			Stock stock1, stock2, stock3,stock4,stock5,stock6 ;
+			Stock stock1, stock2, stock3;
 			stock1 = new Stock();
 			stock2 = new Stock();
 			stock3 = new Stock();
-			stock4 = new Stock();
-			stock5 = new Stock();
-			stock6 = new Stock();
-			
-			
+		
+	
 			DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
 			Date stockDate = null;
 			try {
@@ -60,30 +57,14 @@ import il.ac.mta.stock.model.Portfolio;
 			stock3.setBid((float) 15.5);
 			stock3.setDate(stockDate);
 			
-			stock4.setSymbol("MOR");
-			stock4.setAsk((float) 20);
-			stock4.setBid((float) 15.5);
-			stock4.setDate(stockDate);
-
-			stock5.setSymbol("SIGLER");
-			stock5.setAsk((float) 20);
-			stock5.setBid((float) 15.5);
-			stock5.setDate(stockDate);
-			
-			stock6.setSymbol("QUEEN");
-			stock6.setAsk((float) 20);
-			stock6.setBid((float) 15.5);
-			stock6.setDate(stockDate);
 		
 			myPortfolio.addStock(stock1);
 			myPortfolio.addStock(stock2);
 			myPortfolio.addStock(stock3);
-			//myPortfolio.addStock(stock4);
-			//myPortfolio.addStock(stock5);
-			//myPortfolio.addStock(stock6);
+			myPortfolio.addStock(stock1);
 			myPortfolio.updateBalance(10000);
-			myPortfolio.buyStock("PIH", 10);
-			myPortfolio.buyStock("AAL", 400);
+			myPortfolio.buyStock("PIH", 20);
+			myPortfolio.buyStock("AAL", 30);
 			myPortfolio.buyStock("CAAS", 40);
 			myPortfolio.sellStock("AAL", -1);
 			myPortfolio.removeStock("CAAS");

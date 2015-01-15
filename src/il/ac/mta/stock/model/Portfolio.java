@@ -81,32 +81,34 @@ import java.util.Date;
 		
 		//adding stocks to array
 		public void addStock (Stock stock) throws PortfolioFullException, StockAlreadyExistsException {
+						
+							for (int i=0; i< getPortfolioSize(); i++){
+								if (stock.getSymbol().equals(getStocksStatus()[i].getSymbol()))
+									throw new StockAlreadyExistsException(stock.getSymbol());
+								}
 			
-				for (int i=0; i< getPortfolioSize(); i++){
-					if (stock.getSymbol().equals(getStocksStatus()[i].getSymbol()))
-						throw new StockAlreadyExistsException (stock.getSymbol());
+							if (portfolioSize >= MAX_PORTFOLIO_SIZE)
+								throw new PortfolioFullException();
+							else {
+									stocksStatus[portfolioSize] = new StockStatus(stock);
+									portfolioSize++;
+							}
 					}
-
-				if (portfolioSize > MAX_PORTFOLIO_SIZE)
-					throw new PortfolioFullException ();
-			
-				stocksStatus[portfolioSize] = new StockStatus(stock);
-				portfolioSize++;
-	
-		}
 		//remove stocks from array
-		public void removeStock (String stockSymbol) throws StockNotExistException, BalanceException{
-			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
-				if (stocksStatus[i].getSymbol().equals(stockSymbol)){
-					sellStock(stocksStatus[i].getSymbol(),-1);
-					if (i != portfolioSize-1){ // if the stock we remove is not at the end of the array
-						this.getStocksStatus()[i] = this.getStocksStatus()[portfolioSize-1];
+		public void removeStock (String stockSymbol) throws StockNotExistException{
+					for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+							if (stocksStatus[i].getSymbol().equals(stockSymbol)){
+								sellStock(stocksStatus[i].getSymbol(),-1);
+								if (i != portfolioSize-1){ // if the stock we remove is not at the end of the array
+									this.getStocksStatus()[i] = this.getStocksStatus()[portfolioSize-1];
+								}
+								this.getStocksStatus()[portfolioSize-1] = new StockStatus();
+								portfolioSize--;
+								return;
+							}
+						}
+						return;
 					}
-					this.getStocksStatus()[portfolioSize-1] = new StockStatus();
-					portfolioSize--;
-				}
-			}
-		}
 
 		//printing stocks
 		public String getHtmlString(){
@@ -118,30 +120,30 @@ import java.util.Date;
 		}
 		
 		//selling stock
-		public void sellStock(String symbol, int quantity) throws StockNotExistException, BalanceException{
-			float sellProfit;
-			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
-				if (stocksStatus[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
-					if (quantity <0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
-						sellProfit = (float) (stocksStatus[i].getStockQuantity() * stocksStatus[i].getBid());// the profit is all the amount of stocks left
-						stocksStatus[i].setStockQuantity(0);
+		public void sellStock(String symbol, int quantity) throws StockNotExistException{
+						float sellProfit;
+						for(int i=0; i< this.getPortfolioSize(); i++){
+							if (stocksStatus[i].getSymbol().equals(symbol)){// searching for the stock in stocks array
+								if (quantity <0 || quantity > stocksStatus[i].getStockQuantity()){// if the quantity is -1 or you want to sell more than you have
+									sellProfit = (float) (stocksStatus[i].getStockQuantity() * stocksStatus[i].getBid());// the profit is all the amount of stocks left
+									stocksStatus[i].setStockQuantity(0);
+								}
+								else {
+									sellProfit = (float) (quantity * stocksStatus[i].getBid()); //the profit is only the amount we asked to sell
+									stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
+								}
+								updateBalance(sellProfit);
+								return;
+							}
+							
+						}
+						throw new StockNotExistException(symbol);
 					}
-					else {
-						sellProfit = (float) (quantity * stocksStatus[i].getBid()); //the profit is only the amount we asked to sell
-						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity()-quantity); //dropping the amount of the stocks after we sold part of it
-					}
-					updateBalance(sellProfit);
-				}
-				else throw new StockNotExistException(symbol);
-			}
-			
-		}
 		
 		//buying stock
 		public void buyStock(String symbol, int quantity) throws BalanceException{
-			int howManyStocks; 
-			
-			for(int i=0; i< MAX_PORTFOLIO_SIZE; i++){
+			int howManyStocks; 			
+			for(int i=0; i< this.getPortfolioSize(); i++){
 				if (stocksStatus[i].getSymbol().equals(symbol)){
 					if (quantity < 0){ // buy with all balance
 						howManyStocks = (int) (this.balance / stocksStatus[i].getAsk());
@@ -149,16 +151,19 @@ import java.util.Date;
 						this.balance = 0;
 					} 
 					else {
-						if(quantity * stocksStatus[i].getAsk() > this.balance)//checking that balance won't be negative
+						if(quantity * stocksStatus[i].getAsk() > this.balance){//checking that balance won't be negative
 							throw new BalanceException();
-					
-						stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
-						updateBalance(-(float) (quantity * stocksStatus[i].getAsk()));
-						
+						}
+						else{
+							stocksStatus[i].setStockQuantity(stocksStatus[i].getStockQuantity() + quantity);
+							updateBalance(-(float) (quantity * stocksStatus[i].getAsk()));
+								return;
+							}
+						}
 					}
 				}
+				return;	
 			}
-		}
 		
 		// adding amount to balance
 		public void updateBalance(float amount){
