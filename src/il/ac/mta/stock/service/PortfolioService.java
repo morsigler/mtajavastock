@@ -1,76 +1,204 @@
-/**
- * 
- */
-/**
- * @author mor
- *
- */
 package il.ac.mta.stock.service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import il.ac.mta.dto.PortfolioTotalStatus;
 
 import il.ac.mta.exception.BalanceException;
+import il.ac.mta.exception.IllegalQuantityException;
 import il.ac.mta.exception.PortfolioFullException;
 import il.ac.mta.exception.StockAlreadyExistsException;
 import il.ac.mta.exception.StockNotExistException;
-import il.ac.mta.stock.model.Stock;
+import il.ac.mta.exception.SymbolNotFoundInNasdaq;
 import il.ac.mta.stock.model.Portfolio;
+import il.ac.mta.stock.model.Stock;
+import il.ac.mta.stock.model.StockStatus;
 
-	public class PortfolioService{
-		
-		
-		public Portfolio getPortfolio() throws PortfolioFullException, StockAlreadyExistsException, StockNotExistException, BalanceException {
-			
-			Portfolio myPortfolio;
-			myPortfolio = new Portfolio("Exercise 7 portfolio");
-			
-			Stock stock1, stock2, stock3;
-			stock1 = new Stock();
-			stock2 = new Stock();
-			stock3 = new Stock();
-		
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+/**
+ * @author hanan.gitliz@gmail.com
+ */
+public class PortfolioService {
 	
-			DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-			Date stockDate = null;
-			try {
-				stockDate = formatter.parse("11/15/2014");
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			stock1.setSymbol("PIH");
-			stock1.setAsk((float) 10);
-			stock1.setBid((float) 8.5);
-			stock1.setDate(stockDate);
+	private final static Logger log = Logger.getLogger(PortfolioService.class.getSimpleName());
+	
+	private Portfolio portfolio;
+	
+	public enum OPERATION {
+		ADD, REMOVE, SELL, BUY
+	}
+	
+	private static final int DAYS_BACK = 30;
+	private static PortfolioService instance = new PortfolioService();
 
-			stock2.setSymbol("AAL");
-			stock2.setAsk((float) 30);
-			stock2.setBid((float) 25.5);
-			stock2.setDate(stockDate);
-			
-			stock3.setSymbol("CAAS");
-			stock3.setAsk((float) 20);
-			stock3.setBid((float) 15.5);
-			stock3.setDate(stockDate);
-			
-		
-			myPortfolio.addStock(stock1);
-			myPortfolio.addStock(stock2);
-			myPortfolio.addStock(stock3);
-			myPortfolio.addStock(stock1);
-			myPortfolio.updateBalance(10000);
-			myPortfolio.buyStock("PIH", 20);
-			myPortfolio.buyStock("AAL", 30);
-			myPortfolio.buyStock("CAAS", 40);
-			myPortfolio.sellStock("AAL", -1);
-			myPortfolio.removeStock("CAAS");
-			
-			
-			return myPortfolio;
+	public static PortfolioService getInstance() {
+		return instance;
+	}
+	
+	private DatastoreService datastoreService;
+	
+	private PortfolioService() {
+		datastoreService = DatastoreService.getInstance();
+	}
+
+	public Portfolio getPortfolio() throws StockAlreadyExistsException, PortfolioFullException {
+		if(portfolio == null) {
+			portfolio = datastoreService.loadPortfolilo();
 		}
 		
+		return portfolio;
 	}
+	
+	/**
+	 * Updates Portfolio with algo recommendation.
+	 * @throws PortfolioFullException 
+	 * @throws StockAlreadyExistsException 
+	 */
+	public void update() throws StockAlreadyExistsException, PortfolioFullException {
+		StockStatus[] stocks = getPortfolio().getStocks();
+		List<String> symbols = new ArrayList<>(Portfolio.MAX_PORTFOLIO_SIZE);
+		for (StockStatus stockStatus : stocks) {
+			symbols.add(stockStatus.getSymbol());
+		}
+		
+		List<StockStatus> update = new ArrayList<>(Portfolio.MAX_PORTFOLIO_SIZE);
+		List<Stock> currentStocksList;
+		try {
+			currentStocksList = MarketService.getInstance().getStocks(symbols);
+			for (Stock stock : currentStocksList) {
+				update.add(new StockStatus(stock));
+			}
+			
+			datastoreService.saveToDataStore(update);
+			
+			//load fresh data from database.
+			portfolio = null;
+		} catch (SymbolNotFoundInNasdaq e) {
+			log.severe(e.getMessage());
+		}
+	}
+	
+	public PortfolioTotalStatus[] getPortfolioTotalStatus () throws StockAlreadyExistsException, PortfolioFullException {
+		
+		Portfolio portfolio = getPortfolio();
+		Map<Date, Float> map = new HashMap<>();
+		
+		//get stock status from db.
+		Stock[] stocks = portfolio.getStocks();
+		for (int i = 0; i < stocks.length; i++) {
+			Stock stock = stocks[i];
+			
+			if(stock != null) {
+				List<StockStatus> history = datastoreService.getStockHistory(stock.getSymbol(), DAYS_BACK);
+				
+				for (int j = 0; j < history.size(); j++) {
+					StockStatus curr = history.get(j);
+					Date date = dateMidnight(curr.getDate());
+					float value = curr.getBid()*curr.getStockQuantity();
+					
+					Float total = map.get(date);
+					if(total == null) {
+						total = value;
+					}else {
+						total += value;
+					}
+					
+					map.put(date, value);
+				}
+			}
+		}
+		
+		PortfolioTotalStatus[] ret = new PortfolioTotalStatus[map.size()];
+		
+		int index = 0;
+		//create dto objects
+		for (Date date : map.keySet()) {
+			ret[index] = new PortfolioTotalStatus(date, map.get(date));
+			index++;
+		}
+		
+		//sort by date ascending.
+		Arrays.sort(ret);
+		
+		return ret;
+	}
+	
+	public void setTitle(String title) throws StockAlreadyExistsException, PortfolioFullException {
+		Portfolio portfolio = getPortfolio();
+		portfolio.setTitle(title);
+		datastoreService.updatePortfolio(portfolio);
+		
+		flush();
+	}
+	
+	public void setBalance(float newBalance) throws BalanceException, StockAlreadyExistsException, PortfolioFullException {
+		Portfolio portfolio = getPortfolio();
+		portfolio.updateBalance(newBalance);
+		datastoreService.updatePortfolio(portfolio);
+		
+		flush();
+	}
+	
+	public void addStock(String symbol) throws StockAlreadyExistsException, PortfolioFullException, StockNotExistException, SymbolNotFoundInNasdaq {
+		Portfolio portfolio = getPortfolio();
+		
+		//get current symbol values from nasdaq.
+		Stock stock = MarketService.getInstance().getStock(symbol);
+		
+		
+		if(stock != null) {
+			
+			//first thing, add it to portfolio.
+			portfolio.addStock(stock);
+			
+			//second thing, save the new stock to the database.
+			datastoreService.saveStock(portfolio.findBySymbol(symbol));
+			
+			flush();
+		}
+	}
+	
+	public void buyStock(String symbol, int quantity) throws BalanceException, StockNotExistException, IllegalQuantityException, StockAlreadyExistsException, PortfolioFullException {
+		getPortfolio().buyStock(symbol, quantity);
+		flush();
+	}
+
+	public void sellStock(String symbol, int quantity) throws StockNotExistException, IllegalQuantityException, StockAlreadyExistsException, PortfolioFullException {
+		getPortfolio().sellStock(symbol, quantity);
+		flush();
+	}
+
+	public void removeStock(String symbol) throws StockNotExistException, IllegalQuantityException, StockAlreadyExistsException, PortfolioFullException {
+		getPortfolio().removeStock(symbol);
+		flush();
+	}
+	
+	private void flush() throws StockAlreadyExistsException, PortfolioFullException {
+		//update db
+		datastoreService.updatePortfolio(getPortfolio());
+		//now make next call to portfolio to fetch data from updated db.
+		portfolio = null;
+	}
+	
+	/**
+	 * Transform a given date to start day date.
+	 * @param date
+	 * @return
+	 */
+	private Date dateMidnight(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		return cal.getTime();
+	}
+}
